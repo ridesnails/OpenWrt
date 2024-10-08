@@ -20,27 +20,7 @@ jobs:
 
       - name: Check space usage
         if: (!cancelled())
-        run: df -hT
-
-      - name: Free disk space (Ubuntu)
-        uses: jlumbroso/free-disk-space@main
-        with:
-          # this might remove tools that are actually needed,
-          # if set to "true" but frees about 6 GB
-          tool-cache: false
-          
-          # all of these default to true, but feel free to set to
-          # "false" if necessary for your workflow
-          android: true
-          dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: true
-          swap-storage: true
-
-      - name: Check space usage
-        if: (!cancelled())
-        run: df -hT        
+        run: df -hT  
 
       # 2. 编译 OpenWrt 镜像
       - name: Build OpenWrt image
@@ -53,14 +33,14 @@ jobs:
           echo "CONFIG_TARGET_ROOTFS_PARTSIZE=256" >> .env
           echo "MODULES=openclash openclash-as-default" >> .env
           ./run.sh --image=openwrt/imagebuilder:x86-64-23.05.5
-      
+  
+          
       - name: Upload Build firmware to Release
-        if: steps.compile.outputs.status == 'success' && !cancelled()
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.TOKEN }}
           file_glob: true
-          file: /home/runner/work/OpenWrt/OpenWrt/bin/targets/x86/64/
+          file: /home/runner/work/OpenWrt/OpenWrt/bin/targets/x86/64/*
           asset_name: ${{ github.event.repository.name }}-${{ github.sha }}
           tag: openwrt-${{ env.VERSION }}-x86_64-${{ env.COMPILE_DATE }}
 

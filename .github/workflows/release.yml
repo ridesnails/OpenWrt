@@ -35,37 +35,26 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: openwrt-image
-          path: ./bin/ # 假设输出镜像在该目录
+          path: /home/runner/work/OpenWrt/OpenWrt/bin/targets/x86/64 # 假设输出镜像在该目录
 
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      # 1. 下载之前上传的构建产物
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: openwrt-image
-          path: ./release/ # 下载到 release 目录
-
-      # 2. 创建 GitHub Release
-      - name: Create GitHub Release
+      - name: Create Release
         id: create_release
         uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: 'x86-64-23.05.5'  # 发布版本号
-          release_name: 'OpenWrt x86-64-23.05.5'
+          tag_name: v1.0.0
+          release_name: Release v1.0.0
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub 自动提供的 token
-
-      # 3. 上传编译好的镜像到 Release
+  
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./release/openwrt-image.img # 指定镜像文件
-          asset_name: openwrt-image-v1.0.0.img
-          asset_content_type: application/octet-stream
+          asset_path: /home/runner/work/OpenWrt/OpenWrt/bin/targets/x86/64
+          asset_name: openwrt-image.zip
+          asset_content_type: application/zip
 

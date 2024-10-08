@@ -23,7 +23,7 @@ jobs:
         run: |
           echo "PPPOE_USERNAME=adm" >> modules/network/.env
           echo "PPPOE_PASSWORD=123" >> modules/network/.env
-          echo "LAN_IP=192.16.2.1" >> modules/network/.env
+          echo "LAN_IP=172.16.2.1" >> modules/network/.env
           echo "CLASH_CONFIG_URL=https://gist.github.com/EkkoG/20a52db0169c4a4769689521b1c5500e/raw/cf61a9397d0bdbd5b6bbad8fbb388ec851116470/clash_example.yaml" >> modules/openclash/.env
           echo "CONFIG_TARGET_KERNEL_PARTSIZE=16" > .env
           echo "CONFIG_TARGET_ROOTFS_PARTSIZE=256" >> .env
@@ -35,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: openwrt-image
-          path: ./output/ # 假设输出镜像在该目录
+          path: ./bin/ # 假设输出镜像在该目录
 
   release:
     needs: build
@@ -53,8 +53,8 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: 'v1.0.0'  # 发布版本号
-          release_name: 'OpenWrt v1.0.0 Release'
+          tag_name: 'x86-64-23.05.5'  # 发布版本号
+          release_name: 'OpenWrt x86-64-23.05.5'
           draft: false
           prerelease: false
         env:

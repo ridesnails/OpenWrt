@@ -44,6 +44,6 @@ jobs:
           file_glob: true
           file: /home/runner/work/OpenWrt/OpenWrt/bin/targets/x86/64/*
           asset_name: ${{ github.event.repository.name }}-${{ github.sha }}
-          tag: openwrt-${{ env.VERSION }}-x86_64-${{ env.COMPILE_DATE }}
+          tag: ${{ env.COMPILE_DATE }}
 
 
